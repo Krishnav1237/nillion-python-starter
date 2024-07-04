@@ -1,16 +1,16 @@
 from nada_dsl import *
 
 def nada_main():
-    party1 = Party(name="Party1")
-    party2 = Party(name="Party2")
+    # ... Define parties (bidders)
 
-    set1 = SecretList(Input(name="Set1", party=party1), SecretInteger)
-    set2 = SecretList(Input(name="Set2", party=party2), SecretInteger)
+    bids = [SecretInteger(Input(name=f"Bid{i}", party=party)) for i, party in enumerate(parties)]
 
-    intersection = []
-    for element1 in set1:
-        for element2 in set2:
-            if hash(element1) == hash(element2):
-                intersection.append(element1)
+    highest_bid = bids[0]
+    winner = parties[0]
 
-    return [Output(intersection, "intersection", party1)]
+    for i in range(1, len(bids)):
+        if bids[i] > highest_bid:
+            highest_bid = bids[i]
+            winner = parties[i]
+
+    return [Output(winner, "winner"), Output(highest_bid, "winning_bid")]
